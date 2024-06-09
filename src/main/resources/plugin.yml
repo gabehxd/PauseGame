@@ -1,0 +1,5 @@
+name: PauseGame
+version: '${version}'
+main: computer.livingroom.pausegame.PauseGame
+api-version: '1.20'
+authors: [gabeh]

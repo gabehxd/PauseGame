@@ -1,0 +1,11 @@
+#Whether to save the game when the server pauses, not usually needed but done just in case.
+save-game: true
+
+#How many ticks to wait before savings, unloading, and freezing the server, usually after 1 tick the server will automatically unload and save chunks.
+task-delay-in-ticks: 1
+
+#Whether to try to unload every chunk AFTER the world has been saved, this is usually done for us automatically one tick after the player has left.
+force-unload-chunks: false
+
+#Manual GC invocation is usually disabled by most sets of server flags so this is false by default.
+run-gc: false
