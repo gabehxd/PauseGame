@@ -42,6 +42,7 @@ public class PauseGameListener implements Listener {
         PauseGame.Settings settings = instance.getSettings();
 
         //This needs to run on the next tick or soon after this tick so the server can unload chunks
+        logger.info("Delaying task by " + settings.getDelay() + " tick(s)");
         Utils.runTaskWithPossibleDelay(() -> {
             if (settings.shouldSaveGame()) {
                 logger.info("Saving game...");
@@ -65,8 +66,7 @@ public class PauseGameListener implements Listener {
             //Double-check the player count is empty
             if (Bukkit.getOnlinePlayers().isEmpty()) {
                 ServerTickManager tickManager = Bukkit.getServerTickManager();
-                if (!tickManager.isFrozen())
-                {
+                if (!tickManager.isFrozen()) {
                     logger.info("Pausing game...");
                     tickManager.setFrozen(true);
                 }

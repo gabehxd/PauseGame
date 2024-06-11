@@ -9,3 +9,6 @@ force-unload-chunks: false
 
 #Manual GC invocation is usually disabled by most sets of server flags so this is false by default.
 run-gc: false
+
+#Whether to pause the server when all players are AFK using Essentials
+pause-on-afk: false

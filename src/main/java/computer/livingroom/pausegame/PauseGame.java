@@ -18,28 +18,31 @@ public final class PauseGame extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         getServer().getPluginManager().registerEvents(new PauseGameListener(), this);
+        if (settings.freezeOnAFK() && getServer().getPluginManager().isPluginEnabled("Essentials")) {
+            getServer().getPluginManager().registerEvents(new EssentialsListener(), this);
+        }
         getLogger().info("PauseGame Initialized");
     }
 
     class Settings {
-        public int getDelay()
-        {
+        public int getDelay() {
             return PauseGame.this.getConfig().getInt("task-delay-in-ticks", 1);
         }
 
-        public boolean shouldRunGC()
-        {
+        public boolean shouldRunGC() {
             return PauseGame.this.getConfig().getBoolean("run-gc", false);
         }
 
-        public boolean shouldSaveGame()
-        {
+        public boolean shouldSaveGame() {
             return PauseGame.this.getConfig().getBoolean("save-game", true);
         }
 
-        public boolean forceUnloadChunks()
-        {
+        public boolean forceUnloadChunks() {
             return PauseGame.this.getConfig().getBoolean("force-unload-chunks", false);
+        }
+
+        public boolean freezeOnAFK(){
+            return PauseGame.this.getConfig().getBoolean("freeze-on-afk", false);
         }
     }
 }
