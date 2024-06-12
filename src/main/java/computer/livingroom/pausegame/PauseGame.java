@@ -1,6 +1,5 @@
 package computer.livingroom.pausegame;
 
-import computer.livingroom.pausegame.Listeners.EssentialsListener;
 import computer.livingroom.pausegame.Listeners.ModCompanionListener;
 import computer.livingroom.pausegame.Listeners.PauseGameListener;
 import lombok.Getter;
@@ -23,9 +22,6 @@ public final class PauseGame extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         getServer().getPluginManager().registerEvents(new PauseGameListener(), this);
-        if (settings.freezeOnAFK() && getServer().getPluginManager().isPluginEnabled("Essentials")) {
-            getServer().getPluginManager().registerEvents(new EssentialsListener(), this);
-        }
         if (settings.enableModSupport()) {
             ModCompanionListener listener = new ModCompanionListener();
             getServer().getPluginManager().registerEvents(listener, this);
@@ -46,10 +42,6 @@ public final class PauseGame extends JavaPlugin {
 
         public boolean shouldSaveGame() {
             return PauseGame.this.getConfig().getBoolean("save-game", true);
-        }
-
-        public boolean freezeOnAFK() {
-            return PauseGame.this.getConfig().getBoolean("freeze-on-afk", false);
         }
 
         public boolean enableModSupport() {

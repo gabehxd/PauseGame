@@ -8,9 +8,6 @@ task-delay-in-ticks: 20
 #Manual GC invocation is usually disabled by most sets of server flags so this is false by default.
 run-gc: false
 
-#Whether to pause the server when all players are AFK using Essentials
-pause-on-afk: false
-
 #Whether to let clients let the server know they are in the pause menu
 enable-mod-companion: true
 
