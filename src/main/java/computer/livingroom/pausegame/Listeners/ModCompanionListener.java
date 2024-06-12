@@ -25,7 +25,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), () -> {
             PauseGame.getInstance().getLogger().info("Sending support packet.");
             event.getPlayer().sendPluginMessage(PauseGame.getInstance(), PauseGame.SUPPORTED_KEY, new byte[]{});
-        }, 20);
+        }, 60);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
