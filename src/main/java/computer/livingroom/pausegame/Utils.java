@@ -34,11 +34,9 @@ public class Utils {
         }
 
         ServerTickManager tickManager = Bukkit.getServerTickManager();
-        if (!tickManager.isFrozen()) {
-            logger.info("Pausing game...");
-            tickManager.setFrozen(true);
-            if (step)
-                tickManager.stepGameIfFrozen(settings.getSteps());
-        }
+        logger.info("Pausing game...");
+        tickManager.setFrozen(true);
+        if (step)
+            tickManager.stepGameIfFrozen(settings.getSteps());
     }
 }
