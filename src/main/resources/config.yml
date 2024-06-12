@@ -5,9 +5,6 @@ save-game: false
 #A slight delay will help keep players from spamming the server to save the game if enabled.
 task-delay-in-ticks: 20
 
-#Manual GC invocation is usually disabled by most sets of server flags so this is false by default.
-run-gc: false
-
 #Whether to let clients let the server know they are in the pause menu
 enable-mod-companion: true
 

@@ -36,10 +36,6 @@ public final class PauseGame extends JavaPlugin {
             return PauseGame.this.getConfig().getInt("task-delay-in-ticks", 1);
         }
 
-        public boolean shouldRunGC() {
-            return PauseGame.this.getConfig().getBoolean("run-gc", false);
-        }
-
         public boolean shouldSaveGame() {
             return PauseGame.this.getConfig().getBoolean("save-game", false);
         }

@@ -39,12 +39,6 @@ public class Utils {
                 logger.info("Pausing game...");
                 tickManager.setFrozen(true);
             }
-
-
-            if (settings.shouldRunGC()) {
-                logger.info("Calling GC...");
-                System.gc();
-            }
         }, settings.getDelay());
     }
 }
