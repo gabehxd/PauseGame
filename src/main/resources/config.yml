@@ -1,14 +1,18 @@
-#Whether to save the game when the server pauses, not usually needed but done just in case.
-save-game: true
+#Whether to save the game when the server pauses, usually fine without saving.
+save-game: false
 
-#How many ticks to wait before savings, unloading, and freezing the server, usually after 1 tick the server will automatically unload and save chunks.
-task-delay-in-ticks: 1
-
-#Whether to try to unload every chunk AFTER the world has been saved, this is usually done for us automatically one tick after the player has left.
-force-unload-chunks: false
+#How many ticks to wait before saving and freezing the server, usually after 1 tick the server will automatically unload and save chunks.
+#A slight delay will help keep players from spamming the server to save the game if enabled.
+task-delay-in-ticks: 20
 
 #Manual GC invocation is usually disabled by most sets of server flags so this is false by default.
 run-gc: false
 
 #Whether to pause the server when all players are AFK using Essentials
 pause-on-afk: false
+
+#Whether to let clients let the server know they are in the pause menu
+enable-mod-companion: true
+
+#Whether to freeze players that are on the pause menu while the server is frozen, can cause jittering in some cases
+freeze-pause-menu-players: true
