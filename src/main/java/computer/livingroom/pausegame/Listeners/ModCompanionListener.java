@@ -29,14 +29,12 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerMove(PlayerMoveEvent event)
-    {
-        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers())
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (!Bukkit.getServer().getServerTickManager().isFrozen() || !PauseGame.getInstance().getSettings().freezePauseMenuPlayers())
             return;
 
-        if (pausedPlayers.contains(event.getPlayer()) && Bukkit.getServer().getServerTickManager().isFrozen()) {
+        if (pausedPlayers.contains(event.getPlayer()))
             event.setCancelled(true);
-        }
     }
 
     @Override
