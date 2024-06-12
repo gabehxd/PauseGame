@@ -21,13 +21,13 @@ public final class PauseGame extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getServer().getPluginManager().registerEvents(new PauseGameListener(), this);
         if (settings.enableModSupport()) {
             ModCompanionListener listener = new ModCompanionListener();
             getServer().getPluginManager().registerEvents(listener, this);
             getServer().getMessenger().registerOutgoingPluginChannel(this, SUPPORTED_KEY);
             getServer().getMessenger().registerIncomingPluginChannel(this, PAUSE_KEY, listener);
         }
+        getServer().getPluginManager().registerEvents(new PauseGameListener(), this);
         getLogger().info("PauseGame Initialized");
     }
 

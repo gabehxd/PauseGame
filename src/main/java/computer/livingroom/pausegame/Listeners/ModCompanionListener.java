@@ -8,8 +8,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import java.io.ByteArrayInputStream;
@@ -28,9 +30,24 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         }, 60);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        pausedPlayers.remove(event.getPlayer());
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!Bukkit.getServer().getServerTickManager().isFrozen() || !PauseGame.getInstance().getSettings().freezePauseMenuPlayers())
+        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+            return;
+
+        if (pausedPlayers.contains(event.getPlayer()))
+            event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onPlayerInteractEvent(PlayerInteractEvent event)
+    {
+        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
         if (pausedPlayers.contains(event.getPlayer()))
@@ -50,9 +67,15 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                 pausedPlayers.add(player);
 
                 if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size()) {
-                    Utils.RunFreezeTask();
+                    Utils.instantServerFreeze();
+                    for (Player pausedPlayer : pausedPlayers) {
+                        pausedPlayer.setAllowFlight(true);
+                    }
                 }
             } else {
+                for (Player pausedPlayer : pausedPlayers) {
+                    pausedPlayer.setAllowFlight(false);
+                }
                 pausedPlayers.remove(player);
 
                 ServerTickManager tickManager = Bukkit.getServerTickManager();
@@ -61,7 +84,6 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                     tickManager.setFrozen(false);
                 }
             }
-
         } catch (IOException e) {
             PauseGame.getInstance().getLogger().warning("Player " + player.getName() + " sent malformed data! ");
         }
