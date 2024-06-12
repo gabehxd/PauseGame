@@ -1,9 +1,8 @@
 #Whether to save the game when the server pauses, usually fine without saving.
 save-game: false
 
-#How many ticks to wait before saving and freezing the server, usually after 1 tick the server will automatically unload and save chunks.
-#A slight delay will help keep players from spamming the server to save the game if enabled.
-task-delay-in-ticks: 1
+#How many ticks to step after the server has been paused. After 1 tick the server will usually unload chunks and save them.
+step-ticks: 1
 
 #Whether to let clients let the server know they are in the pause menu
 enable-mod-companion: true

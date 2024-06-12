@@ -45,8 +45,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerInteractEvent(PlayerInteractEvent event)
-    {
+    public void onPlayerInteractEvent(PlayerInteractEvent event) {
         if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
@@ -67,7 +66,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                 pausedPlayers.add(player);
 
                 if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size()) {
-                    Utils.instantServerFreeze();
+                    Utils.freezeGameNoStep();
                     for (Player pausedPlayer : pausedPlayers) {
                         pausedPlayer.setAllowFlight(true);
                     }
