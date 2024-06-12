@@ -57,6 +57,10 @@ tasks.runServer {
         // This is the only required configuration besides applying the plugin.
         // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.20.6")
+
+    downloadPlugins{
+        url("https://ci.ender.zone/job/EssentialsX/lastSuccessfulBuild/artifact/jars/EssentialsX-2.21.0-dev+93-3a6fdd9.jar")
+    }
 }
 
 
