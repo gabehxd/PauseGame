@@ -41,15 +41,14 @@ public final class PauseGame extends JavaPlugin {
         }
 
         public boolean shouldSaveGame() {
-            return PauseGame.this.getConfig().getBoolean("save-game", true);
+            return PauseGame.this.getConfig().getBoolean("save-game", false);
         }
 
         public boolean enableModSupport() {
             return PauseGame.this.getConfig().getBoolean("enable-mod-companion", true);
         }
 
-        public boolean freezePauseMenuPlayers()
-        {
+        public boolean freezePauseMenuPlayers() {
             return PauseGame.this.getConfig().getBoolean("freeze-pause-menu-players", true);
         }
     }
