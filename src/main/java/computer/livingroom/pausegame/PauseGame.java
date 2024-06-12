@@ -33,7 +33,7 @@ public final class PauseGame extends JavaPlugin {
 
     public class Settings {
         public int getDelay() {
-            return PauseGame.this.getConfig().getInt("task-delay-in-ticks", 20);
+            return PauseGame.this.getConfig().getInt("task-delay-in-ticks", 1);
         }
 
         public boolean shouldSaveGame() {
