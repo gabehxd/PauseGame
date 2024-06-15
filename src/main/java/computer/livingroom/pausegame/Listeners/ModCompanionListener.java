@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityAirChangeEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -23,20 +26,22 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
     private final ArrayList<Player> pausedPlayers = new ArrayList<>();
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoinEvent(PlayerJoinEvent event) {
         Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), () -> {
-            PauseGame.getInstance().getLogger().info("Sending support packet.");
+            PauseGame.getInstance().getLogger().info("Sending support packet");
             event.getPlayer().sendPluginMessage(PauseGame.getInstance(), PauseGame.SUPPORTED_KEY, new byte[]{});
         }, 5);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onPlayerQuit(PlayerQuitEvent event) {
+    public void onPlayerQuitEvent(PlayerQuitEvent event) {
+        if (!event.getPlayer().isOp())
+            event.getPlayer().setAllowFlight(false);
         pausedPlayers.remove(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMoveEvent(PlayerMoveEvent event) {
         if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
@@ -53,6 +58,32 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
             event.setCancelled(true);
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityDamageEvent(EntityDamageEvent event) {
+        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+            return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityAirChangeEvent(EntityAirChangeEvent event) {
+        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+            return;
+
+        event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onFoodLevelChangeEvent(FoodLevelChangeEvent event)
+    {
+        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+            return;
+
+        event.setCancelled(true);
+    }
+
+
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
         if (!channel.equals(PauseGame.PAUSE_KEY))
@@ -68,12 +99,14 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                 if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size()) {
                     Utils.freezeGameNoStep();
                     for (Player pausedPlayer : pausedPlayers) {
-                        pausedPlayer.setAllowFlight(true);
+                        if (!pausedPlayer.isOp())
+                            pausedPlayer.setAllowFlight(true);
                     }
                 }
             } else {
                 for (Player pausedPlayer : pausedPlayers) {
-                    pausedPlayer.setAllowFlight(false);
+                    if (!pausedPlayer.isOp())
+                        pausedPlayer.setAllowFlight(false);
                 }
                 pausedPlayers.remove(player);
 
