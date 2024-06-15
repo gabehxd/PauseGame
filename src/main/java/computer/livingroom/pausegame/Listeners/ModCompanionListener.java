@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -75,14 +76,20 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onFoodLevelChangeEvent(FoodLevelChangeEvent event)
-    {
+    public void onFoodLevelChangeEvent(FoodLevelChangeEvent event) {
         if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
         event.setCancelled(true);
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+    public void onEntityRegainHealthEvent(EntityRegainHealthEvent event) {
+        if (!Bukkit.getServer().getServerTickManager().isFrozen())
+            return;
+
+        event.setCancelled(true);
+    }
 
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
