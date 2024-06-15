@@ -50,9 +50,5 @@ public final class PauseGame extends JavaPlugin {
         public boolean enableModSupport() {
             return PauseGame.this.getConfig().getBoolean("enable-mod-companion", true);
         }
-
-        public boolean freezePauseMenuPlayers() {
-            return PauseGame.this.getConfig().getBoolean("freeze-pause-menu-players", true);
-        }
     }
 }

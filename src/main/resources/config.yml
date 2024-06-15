@@ -6,6 +6,3 @@ step-ticks: 1
 
 #Whether to let clients let the server know they are in the pause menu
 enable-mod-companion: true
-
-#Whether to freeze players in place that are on the pause menu while the server is frozen, can cause jittering in some cases
-freeze-pause-menu-players: true

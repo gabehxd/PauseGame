@@ -42,7 +42,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerMoveEvent(PlayerMoveEvent event) {
-        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+        if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
         if (pausedPlayers.contains(event.getPlayer()))
@@ -51,7 +51,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteractEvent(PlayerInteractEvent event) {
-        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+        if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
         if (pausedPlayers.contains(event.getPlayer()))
@@ -60,7 +60,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityDamageEvent(EntityDamageEvent event) {
-        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+        if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
         event.setCancelled(true);
@@ -68,7 +68,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEntityAirChangeEvent(EntityAirChangeEvent event) {
-        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+        if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
         event.setCancelled(true);
@@ -77,7 +77,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFoodLevelChangeEvent(FoodLevelChangeEvent event)
     {
-        if (!PauseGame.getInstance().getSettings().freezePauseMenuPlayers() || !Bukkit.getServer().getServerTickManager().isFrozen())
+        if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
         event.setCancelled(true);
