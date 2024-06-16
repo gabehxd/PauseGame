@@ -3,6 +3,7 @@ package computer.livingroom.pausegame.Listeners;
 import computer.livingroom.pausegame.PauseGame;
 import computer.livingroom.pausegame.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.ServerTickManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,7 +32,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), () -> {
             PauseGame.getInstance().getLogger().info("Sending support packet");
             event.getPlayer().sendPluginMessage(PauseGame.getInstance(), PauseGame.SUPPORTED_KEY, new byte[]{});
-        }, 5);
+        }, 20);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -106,13 +107,13 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                 if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size()) {
                     Utils.freezeGameNoStep();
                     for (Player pausedPlayer : pausedPlayers) {
-                        if (!pausedPlayer.isOp())
+                        if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
                             pausedPlayer.setAllowFlight(true);
                     }
                 }
             } else {
                 for (Player pausedPlayer : pausedPlayers) {
-                    if (!pausedPlayer.isOp())
+                    if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
                         pausedPlayer.setAllowFlight(false);
                 }
                 pausedPlayers.remove(player);
