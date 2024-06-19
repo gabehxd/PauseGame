@@ -32,19 +32,8 @@ public final class PauseGame extends JavaPlugin {
     }
 
     public class Settings {
-        public int getSteps() {
-            int ticks = PauseGame.this.getConfig().getInt("task-delay-in-ticks", -1);
-            if (ticks < 0) {
-                ticks = PauseGame.this.getConfig().getInt("step-ticks", 1);
-                if (ticks < 0) {
-                    return 0;
-                }
-            }
-            return ticks;
-        }
-
         public boolean shouldSaveGame() {
-            return PauseGame.this.getConfig().getBoolean("save-game", false);
+            return PauseGame.this.getConfig().getBoolean("save-game-on-quit", true);
         }
 
         public boolean enableModSupport() {

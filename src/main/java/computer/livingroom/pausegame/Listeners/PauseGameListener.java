@@ -16,8 +16,7 @@ public class PauseGameListener implements Listener {
     public void onServerStart(ServerLoadEvent event) {
         if (event.getType().equals(ServerLoadEvent.LoadType.STARTUP)) {
             //We don't really need to save or anything as the server JUST started
-            PauseGame.getInstance().getLogger().info("Pausing game...");
-            Bukkit.getServerTickManager().setFrozen(true);
+            Utils.freezeGame(false);
         }
     }
 
@@ -35,14 +34,9 @@ public class PauseGameListener implements Listener {
         //The server does not update the player count until the next tick.
         if (Bukkit.getOnlinePlayers().size() != 1)
             return;
-        //Tick managers seems to keep chunks loaded if the player leaves the game(?) Step the game a little bit to ensure the server unloads chunks for us.
-        if (Bukkit.getServer().getServerTickManager().stepGameIfFrozen(PauseGame.getInstance().getSettings().getSteps())) {
-            PauseGame.getInstance().getLogger().info("Stepping game due to a player leaving");
-            return;
-        }
 
         PauseGame.getInstance().getLogger().info("Running freeze task due to a player leaving");
-        Utils.freezeGame(true);
+        Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), () -> Utils.freezeGame(true), 1);
     }
 }
 

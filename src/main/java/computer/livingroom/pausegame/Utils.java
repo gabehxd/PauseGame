@@ -2,6 +2,7 @@ package computer.livingroom.pausegame;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.ServerTickManager;
 import org.bukkit.World;
 
@@ -9,25 +10,29 @@ import java.util.logging.Logger;
 
 @UtilityClass
 public class Utils {
-    public static void freezeGame(boolean step) {
+    public static void freezeGame(boolean isQuit) {
         PauseGame instance = PauseGame.getInstance();
         Logger logger = instance.getLogger();
         PauseGame.Settings settings = instance.getSettings();
 
-        if (settings.shouldSaveGame()) {
+        if (isQuit && settings.shouldSaveGame()) {
             logger.info("Saving game...");
             Bukkit.getServer().savePlayers();
             for (World world : Bukkit.getServer().getWorlds()) {
                 logger.info("Saving chunks for level '" + world.getName() + "'");
                 world.save();
+                for (Chunk loadedChunk : world.getLoadedChunks()) {
+                    loadedChunk.unload();
+                }
             }
             logger.info("All dimensions are saved");
         }
 
+
         ServerTickManager tickManager = Bukkit.getServerTickManager();
-        logger.info("Pausing game...");
-        tickManager.setFrozen(true);
-        if (step)
-            tickManager.stepGameIfFrozen(settings.getSteps());
+        if (!tickManager.isFrozen()) {
+            logger.info("Pausing game...");
+            tickManager.setFrozen(true);
+        }
     }
 }
