@@ -9,16 +9,7 @@ import java.util.logging.Logger;
 
 @UtilityClass
 public class Utils {
-
-    public static void freezeGameNoStep() {
-        freezeGame(false);
-    }
-
-    public static void freezeGameWithStep() {
-        freezeGame(true);
-    }
-
-    private static void freezeGame(boolean step) {
+    public static void freezeGame(boolean step) {
         PauseGame instance = PauseGame.getInstance();
         Logger logger = instance.getLogger();
         PauseGame.Settings settings = instance.getSettings();

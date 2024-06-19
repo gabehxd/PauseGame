@@ -36,11 +36,13 @@ public class PauseGameListener implements Listener {
         if (Bukkit.getOnlinePlayers().size() != 1)
             return;
         //Tick managers seems to keep chunks loaded if the player leaves the game(?) Step the game a little bit to ensure the server unloads chunks for us.
-        if (Bukkit.getServer().getServerTickManager().stepGameIfFrozen(PauseGame.getInstance().getSettings().getSteps()))
+        if (Bukkit.getServer().getServerTickManager().stepGameIfFrozen(PauseGame.getInstance().getSettings().getSteps())) {
+            PauseGame.getInstance().getLogger().info("Stepping game due to a player leaving");
             return;
+        }
 
         PauseGame.getInstance().getLogger().info("Running freeze task due to a player leaving");
-        Utils.freezeGameWithStep();
+        Utils.freezeGame(true);
     }
 }
 

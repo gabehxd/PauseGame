@@ -37,7 +37,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
-        if (!event.getPlayer().isOp())
+        if (!event.getPlayer().getGameMode().equals(GameMode.SURVIVAL))
             event.getPlayer().setAllowFlight(false);
         pausedPlayers.remove(event.getPlayer());
     }
@@ -105,7 +105,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                 pausedPlayers.add(player);
 
                 if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size()) {
-                    Utils.freezeGameNoStep();
+                    Utils.freezeGame(false);
                     for (Player pausedPlayer : pausedPlayers) {
                         if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
                             pausedPlayer.setAllowFlight(true);
