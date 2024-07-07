@@ -18,14 +18,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.messaging.PluginMessageListener;
+import org.bukkit.util.Vector;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ModCompanionListener implements Listener, PluginMessageListener {
-    private final ArrayList<Player> pausedPlayers = new ArrayList<>();
+    private final ArrayList<Player> pausedPlayers = new ArrayList<>(1);
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
@@ -92,6 +94,8 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         event.setCancelled(true);
     }
 
+    private final HashMap<Player, Vector> velocity = new HashMap<>(1);
+
     @Override
     public void onPluginMessageReceived(String channel, Player player, byte[] message) {
         if (!channel.equals(PauseGame.PAUSE_KEY))
@@ -105,27 +109,35 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                 pausedPlayers.add(player);
 
                 if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size()) {
-                    Utils.freezeGame(false);
                     for (Player pausedPlayer : pausedPlayers) {
                         if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
                             pausedPlayer.setAllowFlight(true);
+
+                        velocity.put(pausedPlayer, pausedPlayer.getVelocity());
                     }
+                    Utils.freezeGame(false);
                 }
             } else {
+                //I am paranoid
                 for (Player pausedPlayer : pausedPlayers) {
                     if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
                         pausedPlayer.setAllowFlight(false);
                 }
-                pausedPlayers.remove(player);
 
                 ServerTickManager tickManager = Bukkit.getServerTickManager();
                 if (tickManager.isFrozen()) {
                     PauseGame.getInstance().getLogger().info("Unpausing game...");
                     tickManager.setFrozen(false);
                 }
+                //I am VeRY paranoid
+                for (Player pausedPlayer : pausedPlayers) {
+                    pausedPlayer.setVelocity(velocity.get(pausedPlayer));
+                }
+                pausedPlayers.remove(player);
+                velocity.clear();
             }
         } catch (IOException e) {
-            PauseGame.getInstance().getLogger().warning("Player " + player.getName() + " sent malformed data! ");
+            PauseGame.getInstance().getLogger().warning("Player " + player.getName() + " sent malformed data!");
         }
     }
 }
