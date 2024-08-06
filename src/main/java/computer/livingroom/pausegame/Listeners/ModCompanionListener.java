@@ -1,5 +1,6 @@
 package computer.livingroom.pausegame.Listeners;
 
+import com.google.common.collect.ImmutableList;
 import computer.livingroom.pausegame.PauseGame;
 import computer.livingroom.pausegame.Utils;
 import org.bukkit.Bukkit;
@@ -49,8 +50,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
-        if (pausedPlayers.contains(event.getPlayer()))
-            event.setCancelled(true);
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -58,8 +58,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         if (!Bukkit.getServer().getServerTickManager().isFrozen())
             return;
 
-        if (pausedPlayers.contains(event.getPlayer()))
-            event.setCancelled(true);
+        event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -107,8 +106,7 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
 
             if (paused) {
                 pausedPlayers.add(player);
-
-                if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size()) {
+                if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size() && !Bukkit.getServer().getServerTickManager().isFrozen()) {
                     for (Player pausedPlayer : pausedPlayers) {
                         if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
                             pausedPlayer.setAllowFlight(true);
@@ -118,23 +116,28 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
                     Utils.freezeGame(false);
                 }
             } else {
-                //I am paranoid
-                for (Player pausedPlayer : pausedPlayers) {
-                    if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
-                        pausedPlayer.setAllowFlight(false);
-                }
-
-                ServerTickManager tickManager = Bukkit.getServerTickManager();
-                if (tickManager.isFrozen()) {
-                    PauseGame.getInstance().getLogger().info("Unpausing game...");
-                    tickManager.setFrozen(false);
-                }
-                //I am VeRY paranoid
-                for (Player pausedPlayer : pausedPlayers) {
-                    pausedPlayer.setVelocity(velocity.get(pausedPlayer));
-                }
+                ImmutableList<Player> list =  ImmutableList.copyOf(pausedPlayers);
                 pausedPlayers.remove(player);
-                velocity.clear();
+                if (Bukkit.getServer().getServerTickManager().isFrozen()) {
+                    //I am paranoid
+                    for (Player pausedPlayer : list) {
+                        if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
+                            pausedPlayer.setAllowFlight(false);
+                    }
+
+                    ServerTickManager tickManager = Bukkit.getServerTickManager();
+                    if (tickManager.isFrozen()) {
+                        PauseGame.getInstance().getLogger().info("Unpausing game...");
+                        tickManager.setFrozen(false);
+                    }
+                    //I am VeRY paranoid
+                    for (Player pausedPlayer : list) {
+                        Vector vector = velocity.get(pausedPlayer);
+                        if (vector != null)
+                            pausedPlayer.setVelocity(vector);
+                    }
+                    velocity.clear();
+                }
             }
         } catch (IOException e) {
             PauseGame.getInstance().getLogger().warning("Player " + player.getName() + " sent malformed data!");
