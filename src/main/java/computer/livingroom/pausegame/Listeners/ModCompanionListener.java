@@ -24,11 +24,11 @@ import org.bukkit.util.Vector;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class ModCompanionListener implements Listener, PluginMessageListener {
-    private final ArrayList<Player> pausedPlayers = new ArrayList<>(1);
+    private final HashSet<Player> pausedPlayers = new HashSet<>(1);
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerJoinEvent(PlayerJoinEvent event) {
@@ -104,8 +104,14 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         try {
             boolean paused = stream.readBoolean();
 
+            PauseGame.getInstance().getLogger().fine(player.getName() + " sent sync packet with: " + paused);
+            PauseGame.getInstance().getLogger().fine("Paused players: "+ pausedPlayers.size());
+            PauseGame.getInstance().getLogger().fine("Online players: "+ Bukkit.getOnlinePlayers().size()+ "\n");
             if (paused) {
                 pausedPlayers.add(player);
+                PauseGame.getInstance().getLogger().fine("Added player to paused list");
+                PauseGame.getInstance().getLogger().fine("Paused players: "+ pausedPlayers.size());
+                PauseGame.getInstance().getLogger().fine("Online players: "+ Bukkit.getOnlinePlayers().size() + "\n");
                 if (pausedPlayers.size() == Bukkit.getOnlinePlayers().size() && !Bukkit.getServer().getServerTickManager().isFrozen()) {
                     for (Player pausedPlayer : pausedPlayers) {
                         if (pausedPlayer.getGameMode().equals(GameMode.SURVIVAL))
@@ -118,6 +124,9 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
             } else {
                 ImmutableList<Player> list =  ImmutableList.copyOf(pausedPlayers);
                 pausedPlayers.remove(player);
+                PauseGame.getInstance().getLogger().fine("Removed player from paused list");
+                PauseGame.getInstance().getLogger().fine("Paused players: "+ pausedPlayers.size());
+                PauseGame.getInstance().getLogger().fine("Online players: "+ Bukkit.getOnlinePlayers().size() + "\n");
                 if (Bukkit.getServer().getServerTickManager().isFrozen()) {
                     //I am paranoid
                     for (Player pausedPlayer : list) {
