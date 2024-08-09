@@ -35,13 +35,14 @@ public class ModCompanionListener implements Listener, PluginMessageListener {
         Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), () -> {
             PauseGame.getInstance().getLogger().info("Sending support packet");
             event.getPlayer().sendPluginMessage(PauseGame.getInstance(), PauseGame.SUPPORTED_KEY, new byte[]{});
-        }, 20);
+        }, 100);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerQuitEvent(PlayerQuitEvent event) {
-        if (!event.getPlayer().getGameMode().equals(GameMode.SURVIVAL))
+        if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL))
             event.getPlayer().setAllowFlight(false);
+
         pausedPlayers.remove(event.getPlayer());
     }
 
