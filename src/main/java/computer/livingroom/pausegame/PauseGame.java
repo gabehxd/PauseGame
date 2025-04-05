@@ -1,8 +1,8 @@
 package computer.livingroom.pausegame;
 
-import computer.livingroom.pausegame.Listeners.ModCompanionListener;
 import computer.livingroom.pausegame.Listeners.PauseGameListener;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class PauseGame extends JavaPlugin {
@@ -10,8 +10,6 @@ public final class PauseGame extends JavaPlugin {
     private static PauseGame instance;
     @Getter
     private final Settings settings = new Settings();
-    public static final String PAUSE_KEY = "pausegame:sync";
-    public static final String SUPPORTED_KEY = "pausegame:supported";
 
     @Override
     public void onLoad() {
@@ -20,13 +18,14 @@ public final class PauseGame extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
-        if (settings.enableModSupport()) {
-            ModCompanionListener listener = new ModCompanionListener();
-            getServer().getPluginManager().registerEvents(listener, this);
-            getServer().getMessenger().registerOutgoingPluginChannel(this, SUPPORTED_KEY);
-            getServer().getMessenger().registerIncomingPluginChannel(this, PAUSE_KEY, listener);
+        //Features we are using are only supported since 1.20.4!
+        if (!Utils.isRunningMinecraft(1, 20, 4)) {
+            this.getLogger().severe("Only Minecraft versions 1.20.4 and above are supported!");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
         }
+
+        saveDefaultConfig();
         getServer().getPluginManager().registerEvents(new PauseGameListener(), this);
         getLogger().info("PauseGame Initialized");
     }
@@ -34,10 +33,6 @@ public final class PauseGame extends JavaPlugin {
     public class Settings {
         public boolean shouldSaveGame() {
             return PauseGame.this.getConfig().getBoolean("save-game-on-quit", true);
-        }
-
-        public boolean enableModSupport() {
-            return PauseGame.this.getConfig().getBoolean("enable-mod-companion", true);
         }
     }
 }
