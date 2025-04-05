@@ -1,3 +1,7 @@
 #Whether to save and unloads chunks when all players have left the server
 save-game-on-quit: true
 
+# The delay before the server is frozen in seconds
+# Paper has delay-chunk-unloads-by set to 10s by default.
+#If you want the server to freeze instantly without issue, in spigot.yml set unload-frozen-chunks to true and set this to 0 OR in paper-world-defaults.yml set delay-chunk-unloads-by to zero & et this to 0
+freeze-delay: 10

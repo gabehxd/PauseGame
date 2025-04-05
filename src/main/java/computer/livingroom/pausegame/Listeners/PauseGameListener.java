@@ -36,8 +36,7 @@ public class PauseGameListener implements Listener {
             return;
 
         PauseGame.getInstance().getLogger().info("Running freeze task due to a player leaving");
-        //~1 second should let the server unload stuff properly normally
-        Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), () -> Utils.freezeGame(true), 20);
+        Utils.freezeGame(true);
     }
 }
 

@@ -20,18 +20,27 @@ public class Utils {
                 logger.info("Saving chunks for level '" + world.getName() + "'");
                 world.save();
                 for (Chunk loadedChunk : world.getLoadedChunks()) {
-                    loadedChunk.unload();
+                    loadedChunk.unload(false);
                 }
             }
             logger.info("All dimensions are saved");
         }
 
+        //Paper actually has a delay of ~10 second on chunk unloads
+        Runnable runnable = () -> {
+            ServerTickManager tickManager = Bukkit.getServerTickManager();
+            if (!tickManager.isFrozen()) {
+                logger.info("Pausing game...");
+                tickManager.setFrozen(true);
+            }
+        };
 
-        ServerTickManager tickManager = Bukkit.getServerTickManager();
-        if (!tickManager.isFrozen()) {
-            logger.info("Pausing game...");
-            tickManager.setFrozen(true);
-        }
+        if (settings.getDelay() <= 0 || !isQuit)
+            runnable.run();
+        else
+            //+1 tick since the player will finish leaving on the next tick when this is called
+            Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), runnable, timeToTicks(settings.getDelay()) + 1);
+
     }
 
     //ty @ShaneBeee for this
@@ -55,5 +64,13 @@ public class Utils {
             rev = 0;
         }
         return maj > major || min > minor || (min == minor && rev >= revision);
+    }
+
+    /**
+     * @param seconds Seconds
+     * @return Time of seconds in ticks.
+     */
+    public static int timeToTicks(int seconds) {
+        return seconds * 20;
     }
 }
