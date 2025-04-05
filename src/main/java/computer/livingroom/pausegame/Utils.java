@@ -5,7 +5,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.ServerTickManager;
 import org.bukkit.World;
-
 import java.util.logging.Logger;
 
 @UtilityClass
