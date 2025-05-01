@@ -31,10 +31,6 @@ public final class PauseGame extends JavaPlugin {
     }
 
     public class Settings {
-        public boolean shouldSaveGame() {
-            return PauseGame.this.getConfig().getBoolean("save-game-on-quit", true);
-        }
-
         public int getDelay() {
             return PauseGame.this.getConfig().getInt("freeze-delay", 10);
         }
