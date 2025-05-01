@@ -15,12 +15,10 @@ public class Utils {
         PauseGame.Settings settings = instance.getSettings();
 
         if (isQuit && settings.shouldSaveGame()) {
-            Bukkit.getServer().savePlayers();
             for (World world : Bukkit.getServer().getWorlds()) {
-                logger.info("Saving chunks for level '" + world.getName() + "'");
-                world.save();
+                logger.info("Unloading & Saving chunks for level '" + world.getName() + "'");
                 for (Chunk loadedChunk : world.getLoadedChunks()) {
-                    loadedChunk.unload(false);
+                    loadedChunk.unload(true);
                 }
             }
             logger.info("All dimensions are saved");
@@ -44,7 +42,6 @@ public class Utils {
     }
 
     //ty @ShaneBeee for this
-
     /**
      * Check if server is running a minimum Minecraft version
      *
