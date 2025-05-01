@@ -2,9 +2,8 @@ package computer.livingroom.pausegame;
 
 import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.ServerTickManager;
-import org.bukkit.World;
+
 import java.util.logging.Logger;
 
 @UtilityClass
@@ -14,17 +13,7 @@ public class Utils {
         Logger logger = instance.getLogger();
         PauseGame.Settings settings = instance.getSettings();
 
-        if (isQuit) {
-            for (World world : Bukkit.getServer().getWorlds()) {
-                logger.info("Unloading & Saving chunks for level '" + world.getName() + "'");
-                for (Chunk loadedChunk : world.getLoadedChunks()) {
-                    loadedChunk.unload(true);
-                }
-            }
-            logger.info("All dimensions are saved");
-        }
-
-        //Paper actually has a delay of ~10 second on chunk unloads
+        //Paper actually has a delay of ~10 seconds on chunk unloads
         Runnable runnable = () -> {
             ServerTickManager tickManager = Bukkit.getServerTickManager();
             if (!tickManager.isFrozen()) {
@@ -36,9 +25,8 @@ public class Utils {
         if (settings.getDelay() <= 0 || !isQuit)
             runnable.run();
         else
-            //+1 tick since the player will finish leaving on the next tick when this is called
-            Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), runnable, timeToTicks(settings.getDelay()) + 1);
-
+            //+2 tick since the player will finish leaving on the next tick when this is called AND after chunks should have been unloaded assuming they are unloaded within 1 tick as well
+            Bukkit.getScheduler().runTaskLater(PauseGame.getInstance(), runnable, timeToTicks(settings.getDelay()) + 2);
     }
 
     //ty @ShaneBeee for this
